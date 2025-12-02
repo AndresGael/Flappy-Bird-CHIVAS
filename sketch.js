@@ -1,0 +1,112 @@
+let imagenFondo
+let imagenInicial
+let personaje
+let pared
+let x = 0
+let posY = 100
+let posX = 100
+let dY = 3
+let estado = 0 // 0: inicio, 1: juego, 2: game over
+let wallX = []
+let wallY = []
+let puntaje = 0
+let puntajeMax = 0
+let recordAnterior = 0
+let musicaRecord
+let musicaFondo
+
+function preload() {
+  // put preload code here
+  imagenFondo = loadImage("./images/AkronEstadio.jpg")
+  imagenInicial = loadImage("./images/ChivasInicio.jpg")
+  personaje = loadImage("./images/CHHEAD.png")
+  pared = loadImage("./images/AmericaPared.png")
+  musicaRecord = loadSound("./sounds/chivascampeon.mp3")
+  musicaFondo = loadSound("./sounds/HimnoLigaMx.mp3")
+}
+
+function setup() {
+  // put setup code here
+  createCanvas(1000,512)
+  noCursor()
+}
+
+function draw() {
+  // put drawing code here
+  if (estado === 1) {
+    background(255)
+    imageMode(CORNER)
+    image(imagenFondo,x,0)
+    image(imagenFondo,x+imagenFondo.width,0)
+    x = x - 5
+    if (x <= -imagenFondo.width){
+      x = 0
+    }
+    
+    dY = dY + 1
+    posY = posY + dY
+    for (let i = 0; i < wallX.length; i++) {
+      imageMode(CENTER)
+      image(pared,wallX[i],wallY[i]-500)
+      image(pared,wallX[i],wallY[i]+500)
+
+      if (wallX[i] < -50) {
+        wallX[i] = width + 100
+        wallY[i] = random(200,300)
+      }
+
+      if (wallX[i] === posX) {
+        puntaje = puntaje + 1
+        puntajeMax = max(puntaje,puntajeMax)
+      }
+      
+      wallX[i] = wallX[i] - 5
+      
+      if (posY <= -0  || posY >= height 
+        || (abs(wallX[i]-posX)<70 && abs(wallY[i]-posY)>100)) {
+        musicaFondo.stop()
+        estado = 0
+      } 
+  }
+
+    image(personaje,posX,posY,70,70)
+    text("Puntaje: " + puntaje, width/2 - 60,30)
+  } else if (estado === 0) {
+    cursor()
+    background(0)
+    imageMode(CORNER)
+    image(imagenInicial,0,0,450,600) 
+    textSize(24)
+    fill(255)
+    text("Puntaje Máximo: "+ puntajeMax, 600,100)
+    text("Clic para jugar",600,200)
+    if (puntajeMax > recordAnterior) {
+      if (!musicaRecord.isPlaying()) {
+        musicaRecord.play()
+      }
+    }
+  }
+
+}
+
+
+function mousePressed() {
+  if (estado === 0) {
+    estado = 1
+    posY = 100
+    x = 0
+    dY = 3
+    wallX = [500, 750, 1100]
+    wallY[0] = random(200,300)
+    wallY[1] = random(200,300)
+    wallY[2] = random(200,300)
+    puntaje = 0
+    recordAnterior = puntajeMax
+    noCursor()
+    if (musicaRecord.isPlaying()) {
+      musicaRecord.stop()
+    }
+    musicaFondo.loop()
+  }
+  dY = -10
+}
