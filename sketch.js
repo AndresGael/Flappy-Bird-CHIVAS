@@ -20,7 +20,7 @@ function preload() {
   imagenFondo = loadImage("./images/AkronEstadio.jpg")
   imagenInicial = loadImage("./images/ChivasInicio.jpg")
   personaje = loadImage("./images/CHHEAD.png")
-  pared = loadImage("./images/AmericaPared.png")
+  pared = loadImage("./images/AmericaTuberia (1).png")
   musicaRecord = loadSound("./sounds/chivascampeon.mp3")
   musicaFondo = loadSound("./sounds/HimnoLigaMx.mp3")
 }
